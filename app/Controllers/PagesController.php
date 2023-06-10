@@ -22,6 +22,12 @@ class PagesController
         return view('about', ['company' => $company]);
     }
 
+    public function whoops()
+    {
+        $name = "Whats up";
+        return view('partials.whoops', ['name' => $name]);
+    }
+
     /**
      * Show the contact page.
      */
