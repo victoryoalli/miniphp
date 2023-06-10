@@ -133,3 +133,29 @@ if(!function_exists('clearSession')) {
         session_destroy();
     }
 }
+
+
+function js($key)
+{
+    // Ruta al archivo manifest.json
+    $manifestPath = __DIR__ . '/../../public/manifest.json';
+
+    // Comprueba si el archivo existe
+    if (!file_exists($manifestPath)) {
+        throw new Exception('Manifest file does not exist.');
+    }
+
+    // Obtiene el contenido del archivo
+    $manifestContents = file_get_contents($manifestPath);
+
+    // Decodifica el JSON
+    $manifest = json_decode($manifestContents, true);
+
+    // Comprueba si la clave existe en el manifiesto
+    if (!array_key_exists($key, $manifest)) {
+        throw new Exception("Key {$key} does not exist in manifest.");
+    }
+
+    // Devuelve el valor de la clave
+    return "/{$manifest[$key]["file"]}";
+}

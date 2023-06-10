@@ -1,5 +1,16 @@
 {
-  "devDependencies": {
-    "tailwindcss": "^3.3.2"
-  }
+    "scripts": {
+        "clean": "rm -rf public/build",
+        "dev": "vite",
+        "css":"npx tailwindcss -i ./resources/css/app.css -o ./public/build/css/app.css",
+        "build": "npm run clean &&vite build && npm run css"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.3.2",
+        "vite": "^4.3.9",
+        "vite-plugin-static-copy": "^0.16.0"
+    },
+    "dependencies": {
+        "alpinejs": "^3.12.2"
+    }
 }
