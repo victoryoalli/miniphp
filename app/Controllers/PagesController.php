@@ -17,7 +17,7 @@ class PagesController
      */
     public function about()
     {
-        $company = 'Laracasts';
+        $company = 'Victor Yoalli';
 
         return view('about', ['company' => $company]);
     }
