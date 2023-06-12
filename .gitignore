@@ -1,4 +1,5 @@
 .env
 node_modules/
 vendor/
-public/css/build/
+public/build/
+public/manifest.json
