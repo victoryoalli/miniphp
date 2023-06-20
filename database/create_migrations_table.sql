@@ -1,0 +1,5 @@
+CREATE TABLE `migrations` (
+    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `migration` VARCHAR(255) NOT NULL,
+    `batch` INT UNSIGNED NOT NULL
+);

@@ -1,6 +1,20 @@
 <?php
 
 /**
+ * dd Dump and Die function
+ *
+ * @param object $data
+ * @return void
+ */
+function dd($data)
+{
+    echo "\n";
+    var_dump($data);
+    echo "\n";
+    die();
+}
+
+/**
  * Require a view.
  *
  * @param  string $name

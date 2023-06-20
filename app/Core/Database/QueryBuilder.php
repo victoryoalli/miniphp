@@ -3,6 +3,7 @@
 namespace App\Core\Database;
 
 use PDO;
+use PDOException;
 
 class QueryBuilder
 {
@@ -58,6 +59,15 @@ class QueryBuilder
             $statement->execute($parameters);
         } catch (\Exception $e) {
             //
+        }
+    }
+
+    public function prepare($sql)
+    {
+        try {
+            $statement = $this->pdo->prepare($sql);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
         }
     }
 }
