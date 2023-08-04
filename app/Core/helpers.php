@@ -1,26 +1,12 @@
 <?php
 
 /**
- * dd Dump and Die function
- *
- * @param object $data
- * @return void
- */
-function dd($data)
-{
-    echo "\n";
-    var_dump($data);
-    echo "\n";
-    die();
-}
-
-/**
  * Require a view.
  *
- * @param  string $name
+ * @param  string  $name
  * @param  array  $data
  */
-if(!function_exists('view')) {
+if (! function_exists('view')) {
     function view($view, $data = [])
     {
         $viewname = str_replace('.', '/', $view);
@@ -31,29 +17,44 @@ if(!function_exists('view')) {
 }
 
 /**
+ * Json response.
+ *
+ * @param  string  $name
+ * @param  array  $data
+ */
+if (! function_exists('json')) {
+    function json($data = [], $status = 200)
+    {
+        header('Content-Type: application/json');
+        http_response_code($status);
+
+        echo json_encode($data);
+    }
+}
+
+/**
  * Redirect to a new page.
  *
- * @param  string $path
+ * @param  string  $path
  */
-if(!function_exists('redirect')) {
+if (! function_exists('redirect')) {
     function redirect($path)
     {
         header("Location: /{$path}");
     }
 }
 
-
-if(!function_exists('loadConfig')) {
+if (! function_exists('loadConfig')) {
     function loadConfig($key)
     {
         return require __DIR__.'/../../config/'."{$key}.php";
     }
 }
 
-if(!function_exists('loadEnv')) {
+if (! function_exists('loadEnv')) {
     function loadEnv($filePath)
     {
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             throw new Exception('.env file does not exist.');
         }
 
@@ -67,7 +68,7 @@ if(!function_exists('loadEnv')) {
             }
 
             // Separar el nombre y el valor
-            list($name, $value) = explode('=', $line, 2);
+            [$name, $value] = explode('=', $line, 2);
 
             // Eliminar las comillas del valor si existen
             $value = trim($value);
@@ -78,27 +79,25 @@ if(!function_exists('loadEnv')) {
 
             // Agregar la variable al entorno
             putenv("$name=$value");
-
         }
         // Uso:
         //loadEnv(__DIR__ . '/.env');
 
         // Ahora puedes acceder a tus variables de entorno
         //echo getenv('MY_VARIABLE');
-
     }
 }
 
-if(!function_exists('env')) {
-    function env($key, $default='')
+if (! function_exists('env')) {
+    function env($key, $default = '')
     {
-        $result =  empty(getenv($key)) ? $default : getenv($key);
+        $result = empty(getenv($key)) ? $default : getenv($key);
+
         return $result;
     }
 }
 
-
-if(!function_exists('session')) {
+if (! function_exists('session')) {
     function session($key = null, $value = null)
     {
         // Iniciar la sesión si aún no ha sido iniciada
@@ -122,7 +121,6 @@ if(!function_exists('session')) {
     }
 }
 
-
 /**
  * Clear session.
  *
@@ -133,7 +131,7 @@ if(!function_exists('session')) {
  * Intentar obtener un valor de la sesión
  * $value = session('key');  // Devuelve null
  */
-if(!function_exists('clearSession')) {
+if (! function_exists('clearSession')) {
     function clearSession()
     {
         if (session_status() == PHP_SESSION_NONE) {
@@ -148,28 +146,38 @@ if(!function_exists('clearSession')) {
     }
 }
 
+if (! function_exists('js')) {
+    function js($key)
+    {
+        // Ruta al archivo manifest.json
+        $manifestPath = __DIR__.'/../../public/manifest.json';
 
-function js($key)
-{
-    // Ruta al archivo manifest.json
-    $manifestPath = __DIR__ . '/../../public/manifest.json';
+        // Comprueba si el archivo existe
+        if (! file_exists($manifestPath)) {
+            throw new Exception('Manifest file does not exist.');
+        }
 
-    // Comprueba si el archivo existe
-    if (!file_exists($manifestPath)) {
-        throw new Exception('Manifest file does not exist.');
+        // Obtiene el contenido del archivo
+        $manifestContents = file_get_contents($manifestPath);
+
+        // Decodifica el JSON
+        $manifest = json_decode($manifestContents, true);
+
+        // Comprueba si la clave existe en el manifiesto
+        if (! array_key_exists($key, $manifest)) {
+            throw new Exception("Key {$key} does not exist in manifest.");
+        }
+
+        // Devuelve el valor de la clave
+        return "/{$manifest[$key]['file']}";
     }
+}
 
-    // Obtiene el contenido del archivo
-    $manifestContents = file_get_contents($manifestPath);
-
-    // Decodifica el JSON
-    $manifest = json_decode($manifestContents, true);
-
-    // Comprueba si la clave existe en el manifiesto
-    if (!array_key_exists($key, $manifest)) {
-        throw new Exception("Key {$key} does not exist in manifest.");
+if (! function_exists('dd')) {
+    function dd($data)
+    {
+        echo '<pre style="color:green;background-color:black;padding:1rem;">';
+        die(var_dump($data));
+        echo '</pre>';
     }
-
-    // Devuelve el valor de la clave
-    return "/{$manifest[$key]["file"]}";
 }
