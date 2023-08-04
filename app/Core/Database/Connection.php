@@ -7,22 +7,64 @@ use PDOException;
 
 class Connection
 {
+    protected static $connections = [];
+
     /**
-     * Create a new PDO connection.
+     * Get or create a new PDO connection.
      *
+     * @param string $name
      * @param array $config
+     * @return PDO
      */
-    public static function make($config)
+    public static function make($name, $config)
     {
+        // If the connection already exists, return it.
+        if (isset(self::$connections[$name])) {
+            return self::$connections[$name];
+        }
+        $currentConfig = $config[$name];
+        // If not, create a new connection.
         try {
-            return new PDO(
-                $config['connection'].':host='.$config['host'].';dbname='.$config['database'],
-                $config['username'],
-                $config['password'],
-                $config['options']
+            self::$connections[$name] = new PDO(
+                $currentConfig['connection'],
+                $currentConfig['username'],
+                $currentConfig['password'],
+                $currentConfig['options']
             );
+            return self::$connections[$name];
         } catch (PDOException $e) {
+            // dd($currentConfig);
+            // dd($e);
             die($e->getMessage());
         }
     }
 }
+
+// <?php
+
+// namespace App\Core\Database;
+
+// use PDO;
+// use PDOException;
+
+// class Connection
+// {
+//     /**
+//      * Create a new PDO connection.
+//      *
+//      * @param array $config
+//      */
+//     public static function make($config)
+//     {
+//         try {
+//             return new PDO(
+//                 $config['connection'].';Database='.$config['name'],
+//                 $config['username'],
+//                 $config['password'],
+//                 $config['options']
+//             );
+//         } catch (PDOException $e) {
+//             die($e);
+//         }
+//     }
+// }
